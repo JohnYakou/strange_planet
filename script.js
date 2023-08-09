@@ -8,7 +8,27 @@ window.addEventListener('load', function(){
     canvas.height = 500;
 
     class InputHandler{
+        constructor(game){
+            this.game = game;
+            // e => Une caractéristique particulière de la fonction flèche est que ce mot-clé à l'intérieur de la fonction flèche représente toujours les objets dans lesquels la fonction flèche est définie.
+            window.addEventListener("keydown", e => {
+                console.log(e.key);
+                if(((e.key === "ArrowUp") ||
+                    (e.key === "ArrowDown")
+                ) && this.game.keys.indexOf(e.key) === -1){
+                    this.game.keys.push(e.key);
+                }
+            });
 
+            // La méthode indexOf() renvoie le premier index auquel un élément donné peut être trouvé dans le tableau, ou renvoie -1 si l'élément n'est pas présent.
+            window.addEventListener("keyup", e => {
+                if(this.game.keys.indexOf(e.key) > -1){
+                    // La méthode splice() modifie le contenu d'un tableau en supprimant ou en remplaçant les éléments existants.
+                    this.game.keys.splice(this.game.keys.indexOf(e.keys), 1);
+                }
+                console.log(this.game.keys);
+            });
+        }
     }
 
     class Projectile{
@@ -28,8 +48,14 @@ window.addEventListener('load', function(){
             this.x = 20;
             this.y = 100;
             this.speedY = 0;
+            this.maxSpeed = 3;
         }
         update(){
+            // La méthode includes() permet de déterminer si un tableau contient une valeur et renvoie true si c'est le cas, false sinon.
+            if(this.game.keys.includes("ArrowUp")) this.speedY = -this.maxSpeed;
+            else if(this.game.keys.includes("ArrowDown")) this.speedY = this.maxSpeed;
+            // Sans  ce else, le perso ne s'arrête pas.
+            else this.speedY = 0;
             this.y += this.speedY;
         }
         draw(context){
@@ -59,6 +85,8 @@ window.addEventListener('load', function(){
             this.height = height;
             // crée une nouvelle instance de la class Player
             this.player = new Player(this);
+            this.input = new InputHandler(this);
+            this.keys = [];
         }
         update(){
             this.player.update();
