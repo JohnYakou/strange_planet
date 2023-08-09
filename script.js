@@ -120,7 +120,20 @@ window.addEventListener('load', function(){
     }
 
     class UI{
+        constructor(game){
+            this.game = game;
+            this.fontSize = 25;
+            this.fontFamily = "Helvitica";
+            this.color = "yellow";
+        }
 
+        draw(context){
+            // ammo
+            context.fillStyle = this.color;
+            for(let i = 0; i < this.game.ammo; i++){
+                context.fillRect(20 + 5 * i, 50, 3, 20);
+            }
+        }
     }
 
     class Game{
@@ -130,6 +143,7 @@ window.addEventListener('load', function(){
             // crée une nouvelle instance de la class Player
             this.player = new Player(this);
             this.input = new InputHandler(this);
+            this.ui = new UI(this);
             this.keys = [];
             this.ammo = 20;
             this.maxAmmo = 50;
@@ -150,6 +164,7 @@ window.addEventListener('load', function(){
       
         draw(context){
             this.player.draw(context);
+            this.ui.draw(context);
         }
     }
 
