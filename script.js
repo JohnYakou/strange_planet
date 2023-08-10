@@ -77,9 +77,12 @@ window.addEventListener('load', function(){
             this.maxSpeed = 3;
             this.projectiles = [];
             this.image = document.getElementById("player");
+            this.powerUp = false;
+            this.powerUpTimer = 0;
+            this.powerUpLimit = 10000;
         }
         
-        update(){
+        update(deltaTime){
             // La méthode includes() permet de déterminer si un tableau contient une valeur et renvoie true si c'est le cas, false sinon.
             if(this.game.keys.includes("ArrowUp")) this.speedY = -this.maxSpeed;
             else if(this.game.keys.includes("ArrowDown")) this.speedY = this.maxSpeed;
@@ -100,15 +103,29 @@ window.addEventListener('load', function(){
             }else{
                 this.frameX = 0;
             }
+
+            // powerUp
+            if(this.powerUp){
+                if(this.powerUpTimer > this.powerUpLimit){
+                    this.powerUpTimer = 0;
+                    this.powerUp = false;
+                    this.frameY = 0;
+                }else{
+                    this.powerUpTimer += deltaTime;
+                    this.frameY = 1;
+                    this.game.ammo += 0.1;
+                }
+            }
         }
         
         draw(context){
             if(this.game.debug)context.strokeRect(this.x, this.y, this.width, this.height);
-            context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
 
             this.projectiles.forEach(projectile => {
                 projectile.draw(context);
             });
+
+            context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
         }
 
         shootTop(){
@@ -117,6 +134,22 @@ window.addEventListener('load', function(){
                 // A chaque que je tire, je tire une munition. J'en n'ai 20 au début (voir le constructor de la class Game).
                 this.game.ammo--;
             }
+
+            // condition me permettant d'appliquer la méthode shootBottom
+            if(this.powerUp) this.shootBottom();
+        }
+
+        // méthode pour tirer par la queue via le power up
+        shootBottom(){
+            if(this.game.ammo > 0){
+                this.projectiles.push(new Projectile(this.game, this.x + 80, this.y + 175));
+            }
+        }
+
+        enterPowerUp(){
+            this.powerUpTimer = 0;
+            this.powerUp = true;
+            this.game.ammo = this.game.maxAmmo;
         }
     }
 
@@ -186,8 +219,8 @@ window.addEventListener('load', function(){
             this.image = document.getElementById("lucky");
             this.frameY = Math.floor(Math.random() * 2);
             this.lives = 3;
-            this.score = 15;
-            this.type = 'lucky';
+            this.score = 1;
+            this.type = "lucky";
         }
     }
 
@@ -254,10 +287,7 @@ window.addEventListener('load', function(){
             context.font = this.fontSize + "px " + this.fontFamily;
             // score
             context.fillText("score : " + this.game.score, 20, 40);
-            // ammo
-            for(let i = 0; i < this.game.ammo; i++){
-                context.fillRect(20 + 5 * i, 50, 3, 20);
-            }
+            
             // timer
             const formattedTime = (this.game.gameTime * 0.001).toFixed(1);
             context.fillText("Timer : " + formattedTime, 20, 100);
@@ -278,6 +308,14 @@ window.addEventListener('load', function(){
                 context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 40);
                 context.font = "25px " + this.fontFamily;
                 context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 40);
+            }
+
+            // ammo. Je déplace ammo au-dessous de timer, car, sinon, c'est tout le texte qui change de couleur (timer, You Win).
+            // je change la couleur quant je suis en power up
+            if(this.game.player.powerUp) context.fillStyle = "gold";
+
+            for(let i = 0; i < this.game.ammo; i++){
+                context.fillRect(20 + 5 * i, 50, 3, 20);
             }
 
             context.restore();
@@ -316,7 +354,7 @@ window.addEventListener('load', function(){
 
             this.background.update();
             this.background.layer4.update();
-            this.player.update();
+            this.player.update(deltaTime);
 
             if(this.ammoTimer > this.ammoInterval){
                 if(this.ammo < this.maxAmmo) this.ammo++;
@@ -330,6 +368,8 @@ window.addEventListener('load', function(){
                 // player = rect1 & enemy = rect2
                 if(this.checkCollision(this.player, enemy)){
                     enemy.markedForDeletion = true;
+                    if(enemy.type = "lucky") this.player.enterPowerUp();
+                    else this.score--;
                 }
                 // la collision avec les projectiles. projectile = rect1 & enemy = rect2
                 this.player.projectiles.forEach(projectile => {
