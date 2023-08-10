@@ -76,7 +76,7 @@ window.addEventListener('load', function(){
             this.angle = 0;
             this.va = Math.random() * 0.2 - 0.1;
             this.bounced = 0;
-            this.bottomBounceBoundary = Math.random() * 100 + 60;
+            this.bottomBounceBoundary = Math.random() * 80 + 60;
         }
 
         update(){
@@ -194,7 +194,7 @@ window.addEventListener('load', function(){
         enterPowerUp(){
             this.powerUpTimer = 0;
             this.powerUp = true;
-            this.game.ammo = this.game.maxAmmo;
+            if(this.game.ammo < this.game.maxAmmo) this.game.ammo = this.game.maxAmmo;
         }
     }
 
@@ -394,7 +394,7 @@ window.addEventListener('load', function(){
             this.gameTime = 0;
             this.timeLimit = 15000;
             this.speed = 1;
-            this.debug = true;
+            this.debug = false;
 
         }
         
@@ -427,7 +427,7 @@ window.addEventListener('load', function(){
                         this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
                     }
 
-                    if(enemy.type = "lucky") this.player.enterPowerUp();
+                    if(enemy.type === "lucky") this.player.enterPowerUp();
                     else this.score--;
                 }
                 
@@ -464,8 +464,8 @@ window.addEventListener('load', function(){
       
         draw(context){
             this.background.draw(context);
-            this.player.draw(context);
             this.ui.draw(context);
+            this.player.draw(context);
             this.particles.forEach(particle => {
                 particle.draw(context);
             });
