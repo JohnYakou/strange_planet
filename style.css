@@ -27,7 +27,9 @@
 #projectile,
 #gears,
 #hivewhale,
-#drone{
+#drone,
+#smokeExplosion,
+#fireExplosion{
     /* on chache les layers. On les fera apparaitre via le JS (voir la class Layer)*/
     display: none;
 }
