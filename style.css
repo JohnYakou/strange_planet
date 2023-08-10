@@ -25,7 +25,8 @@
 #angler2,
 #lucky,
 #projectile,
-#gears{
+#gears,
+#hivewhale{
     /* on chache les layers. On les fera apparaitre via le JS (voir la class Layer)*/
     display: none;
 }
