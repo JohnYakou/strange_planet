@@ -274,7 +274,7 @@ window.addEventListener('load', function(){
         constructor(game){
             this.game = game;
             this.fontSize = 25;
-            this.fontFamily = "Helvitica";
+            this.fontFamily = "Bangers";
             this.color = "white";
         }
 
@@ -298,16 +298,16 @@ window.addEventListener('load', function(){
                 let message2;
 
                 if(this.game.score > this.game.winningScore){
-                    message1 = "You Win";
+                    message1 = "Congratulations";
                     message2 = "Well done !";
                 }else{
                     message1 = "You lose";
                     message2 = "Try again !";
                 }
-                context.font = "50px " + this.fontFamily;
-                context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 40);
+                context.font = "70px " + this.fontFamily;
+                context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 20);
                 context.font = "25px " + this.fontFamily;
-                context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 40);
+                context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 20);
             }
 
             // ammo. Je déplace ammo au-dessous de timer, car, sinon, c'est tout le texte qui change de couleur (timer, You Win).
@@ -371,6 +371,7 @@ window.addEventListener('load', function(){
                     if(enemy.type = "lucky") this.player.enterPowerUp();
                     else this.score--;
                 }
+                
                 // la collision avec les projectiles. projectile = rect1 & enemy = rect2
                 this.player.projectiles.forEach(projectile => {
                     if(this.checkCollision(projectile, enemy)){
