@@ -166,7 +166,6 @@ window.addEventListener('load', function(){
 
     class Angler2 extends Enemy{
         constructor(game){
-            // super fait réf. à la super class (ou class parent)
             super(game);
             this.width = 213;
             this.height = 165;
@@ -175,6 +174,20 @@ window.addEventListener('load', function(){
             this.frameY = Math.floor(Math.random() * 2);
             this.lives = 3;
             this.score = this.lives;
+        }
+    }
+
+    class LuckyFish extends Enemy{
+        constructor(game){
+            super(game);
+            this.width = 99;
+            this.height = 95;
+            this.y = Math.random() * (this.game.height * 0.9 - this.height);
+            this.image = document.getElementById("lucky");
+            this.frameY = Math.floor(Math.random() * 2);
+            this.lives = 3;
+            this.score = 15;
+            this.type = 'lucky';
         }
     }
 
@@ -355,9 +368,9 @@ window.addEventListener('load', function(){
         addEnemy(){
             // Math.random génère un nb aléatoire entre 0 et 1
             const randomize = Math.random();
-            if(randomize < 0.5) this.enemies.push(new Angler1(this));
-            else this.enemies.push(new Angler2(this));
-            this.enemies.push(new Angler1(this));
+            if(randomize < 0.3) this.enemies.push(new Angler1(this));
+            else if(randomize < 0.6) this.enemies.push(new Angler2(this));
+            else this.enemies.push(new LuckyFish(this));
         }
 
         // rect = rectangle
