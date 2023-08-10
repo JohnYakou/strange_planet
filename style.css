@@ -23,7 +23,8 @@
 #player,
 #angler1,
 #angler2,
-#lucky{
+#lucky,
+#projectile{
     /* on chache les layers. On les fera apparaitre via le JS (voir la class Layer)*/
     display: none;
 }
