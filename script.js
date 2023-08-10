@@ -4,7 +4,7 @@ window.addEventListener('load', function(){
     const canvas = document.getElementById("canvas1");
     // drawing context : un objet intégré qui contient toutes les méthodes et propriétés permettant de dessiner et d'animer des couleurs, des formes et d'autres graphiques sur le canvas HTML.
     const ctx = canvas.getContext("2d");
-    canvas.width = 500;
+    canvas.width = 700;
     canvas.height = 500;
 
     class InputHandler{
@@ -127,17 +127,26 @@ window.addEventListener('load', function(){
             this.speedX = Math.random() * -1.5 - 0.5;
             this.lives = 5;
             this.score = this.lives;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.maxFrame = 37;
         }
 
         update(){
-            this.x += this.speedX;
+            this.x += this.speedX - this.game.speed;
             if(this.x + this.width < 0) this.markedForDeletion = true;
+
+            // sprite animation
+            if(this.frameX < this.maxFrame){
+                this.frameX++;
+            }else{
+                this.frameX = 0;
+            }
         }
 
         draw(context){
-            context.fillStyle = "red";
-            context.fillRect(this.x, this.y, this.width, this.height);
-            context.fillStyle = "black";
+            if(this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
+            context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
             context.front = "20px Helvetica";
             context.fillText(this.lives, this.x, this.y);
         }
@@ -147,9 +156,11 @@ window.addEventListener('load', function(){
         constructor(game){
             // super fait réf. à la super class (ou class parent)
             super(game);
-            this.width = 228 * 0.2;
-            this.height = 169 * 0.2;
+            this.width = 228;
+            this.height = 169;
             this.y = Math.random() * (this.game.height * 0.9 - this.height);
+            this.image = document.getElementById("angler1");
+            this.frameY = Math.floor(Math.random() * 3);
         }
     }
 

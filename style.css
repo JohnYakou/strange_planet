@@ -19,7 +19,10 @@
 #layer2,
 #layer3,
 #layer4,
-#player{
+#player,
+#angler1,
+#angler2,
+#lucky{
     /* on chache les layers. On les fera apparaitre via le JS (voir la class Layer)*/
     display: none;
 }
